@@ -59,7 +59,7 @@ If answer is "yse", then to select a level of password validation as follows:
 
 LOW    Length >= 8
 MEDIUM Length >= 8, numeric, mixed case, and special characters
-STRONG Length >= 8, numeric, mixed case, special characters and dictionary              file
+STRONG Length >= 8, numeric, mixed case, special characters and dictionary              
 
 Please enter 0 = LOW, 1 = MEDIUM and 2 = STRONG: 1`
 
@@ -179,6 +179,85 @@ You will see a web page containing detailed information about your server:
 
 ![php](https://user-images.githubusercontent.com/104405639/168980760-c85a4843-3219-416b-a8b4-5466d0723364.png)
 
-After checking the relevant information about your PHP server through that page, it’s best to remove the file you created as it contains sensitive information about your PHP environment and your Ubuntu server. You can use rm to remove that file:
+After checking the relevant information about your PHP server through that page, it’s best to remove the file you created as it contains sensitive information about your PHP environment and your Ubuntu server. You can use rm to remove that file by replacing your_domain with projectLEMP:
 
 `sudo rm /var/www/your_domain/info.php`
+
+# STEP 6 – Retrieving Data From MYSQL Database With PHP (CONTINUED)
+
+In this step you will create a test database (DB) with simple "To do list" and configure access to it, so the Nginx website would be able to query data from the DB and display it.
+
+We will create a database named example_database and a user named example_user, but you can replace these names with different values.
+First, connect to the MySQL console using the root account:
+
+`sudo mysql`
+
+To create a new database, run the following command from your MySQL console:
+
+`mysql> CREATE DATABASE 'example_database';`
+
+The following command creates a new user named example_user, using mysql_native_password as default authentication method. We’re defining this user’s password as password, but you should replace this value with a secure password of your own choosing.
+
+`mysql>  CREATE USER 'example_user'@'%' IDENTIFIED WITH mysql_native_password BY 'password';`
+
+Now we need to give this user permission over the example_database database:
+
+`mysql> GRANT ALL ON example_database.* TO 'example_user'@'%';`
+
+This will give the example_user user full privileges over the example_database database, while preventing this user from creating or modifying other databases on your server.
+
+`mysql> exit`
+
+You can test if the new user has the proper permissions by logging in to the MySQL console again, this time using the custom user credentials:
+
+`mysql -u example_user -p`
+
+Notice the -p flag in this command, which will prompt you for the password used when creating the example_user user. After logging in to the MySQL console, confirm that you have access to the example_database database:
+
+`mysql> SHOW DATABASES;`
+
+This will give you the following output:
+
+![Dataoutput](https://user-images.githubusercontent.com/104405639/170162253-5bd1c69c-f8f1-4e3d-be85-a69cb52f99dc.png)
+
+Next, we’ll create a test table named todo_list. From the MySQL console, run the following statement:
+
+`mysql> CREATE TABLE example_database.todo_list (
+        item_id INT AUTO_INCREMENT,
+        content VARCHAR(255),
+        PRIMARY KEY(item_id)
+ );`
+ 
+ Insert a few rows of content in the test table. You might want to repeat the next command a few times, using different VALUES:
+
+`mysql> INSERT INTO example_database.todo_list (content) VALUES ("My first important item");
+ ("My second important item");
+ ("My third important item");
+ ("and this one more thing");`
+ 
+ You’ll see the following output:
+
+![todo-output](https://user-images.githubusercontent.com/104405639/170266797-c2b3dbce-88bd-4c20-aa1b-077196aed738.png)
+
+`mysql> exit`
+
+Now you can create a PHP script that will connect to MySQL and query for your content. Create a new PHP file in your custom web root directory using your preferred editor. We’ll use vi for that:
+
+`nano /var/www/projectLEMP/todo_list.php`
+
+The following PHP script connects to the MySQL database and queries for the content of the todo_list table, displays the results in a list. If there is a problem with the database connection, it will throw an exception.
+Copy this content into your todo_list.php script:
+
+Save and close the file when you are done editing.
+You can now access this page in your web browser by visiting the domain name or public IP address configured for your website, followed by:
+
+`http://<Public_domain_or_IP>/todo_list.php`
+
+You should see a page like this, showing the content you’ve inserted in your test table:
+
+![Todolist](https://user-images.githubusercontent.com/104405639/170268934-60f2bffe-32b1-41a1-a165-aa5723d9a943.png)
+
+That means your PHP environment is ready to connect and interact with your MySQL server.
+
+Congratulations!
+In this guide, we have built a flexible foundation for serving PHP websites and applications to your visitors, using Nginx as web server and MySQL as database management system.
