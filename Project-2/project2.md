@@ -248,6 +248,8 @@ Now you can create a PHP script that will connect to MySQL and query for your co
 The following PHP script connects to the MySQL database and queries for the content of the todo_list table, displays the results in a list. If there is a problem with the database connection, it will throw an exception.
 Copy this content into your todo_list.php script:
 
+![list-todo](https://user-images.githubusercontent.com/104405639/170591453-507211d2-3e70-4b2b-9b78-f5ca9dc4ffef.png)
+
 Save and close the file when you are done editing.
 You can now access this page in your web browser by visiting the domain name or public IP address configured for your website, followed by:
 
