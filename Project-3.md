@@ -91,3 +91,11 @@ res.send('Welcome to Express');
 app.listen(port, () => {
 console.log(`Server running on port ${port}`)
 });`
+
+Use :w to save in vim and use :qa to exit vim
+
+Now it is time to start our server to see if it works. Open your terminal in the same directory as your index.js file and type:
+
+`node index.js` 
+
+If every thing goes well, you should see Server running on port 5000 in your terminal.
